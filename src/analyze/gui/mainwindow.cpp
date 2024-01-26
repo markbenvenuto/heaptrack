@@ -140,6 +140,8 @@ void setupTreeContextMenu(QTreeView* view, T callback)
     setupContextMenu(view, [callback](const QModelIndex& index) {
         QMenu contextMenu;
         auto* viewCallerCallee = contextMenu.addAction(i18n("View Caller/Callee"));
+        auto* viewCopy = contextMenu.addAction(QLatin1String("Copy"));
+
         auto* action = contextMenu.exec(QCursor::pos());
         if (action == viewCallerCallee) {
             const auto symbol = index.data(TreeModel::SymbolRole).value<Symbol>();
@@ -147,7 +149,15 @@ void setupTreeContextMenu(QTreeView* view, T callback)
             if (symbol.isValid()) {
                 callback(symbol);
             }
+        } else if( action == viewCopy ) {
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            const auto symbol = index.data(TreeModel::SymbolRole).value<Symbol>();
+            const auto resultData = index.data(TreeModel::ResultDataRole).value<const ResultData*>();
+
+            auto str =  Util::toString(symbol, *resultData, Util::Short);
+            clipboard->setText(str);
         }
+
     });
 }
 

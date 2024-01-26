@@ -141,6 +141,7 @@ QVariant TreeModel::data(const QModelIndex& index, int role) const
             break;
         }
     } else if (role == Qt::ToolTipRole) {
+        // TODO - wrap C++ name
         auto toStr = [this](StringIndex stringId) { return m_data.resultData->string(stringId); };
         QString tooltip;
         QTextStream stream(&tooltip);
